@@ -55,11 +55,12 @@ function searchWeather(searchValue) {
 };
 
 function getForecast(searchValue) {
-  fetch("http://api.openweathermap.org/data/2.5/forecast?q=" + searchValue + "&cnt=5&appid=" + apiKey)
+  fetch("http://api.openweathermap.org/data/2.5/forecast?q=" + searchValue + "&appid=" + apiKey)
     .then(function (response) {
       return response.json();
     })
     .then(function (data) {
+      console.log(data);
       var forecastEl = document.getElementById("forecast");
       var forecastRowEl = document.createElement("div");
       forecastRowEl.classList.add("row");
@@ -67,12 +68,12 @@ function getForecast(searchValue) {
         if (data.list[i].dt_txt.indexOf("15:00:00") !== -1) {
           var columnEl = document.createElement("div");
           columnEl.classList.add("col-md-2");
-
+          console.log(columnEl);
           var cardEl = document.createElement("div");
           cardEl.classList.add("card", "bg-primary", "text-white");
 
           var cardBodyEl = document.createElement("div");
-          cardBodyEl.classList.add("card-body");
+          cardBodyEl.classList.add("card-body", "p-2");
 
           var titleEl = document.createElement("h5");
           titleEl.classList.add("card-title");
@@ -101,5 +102,9 @@ function getForecast(searchValue) {
       }
     })
 };
+
+function getUVIndex(lon, lat) {
+  
+}
 
 document.getElementById("search-btn").addEventListener("click", getSearchValue);
