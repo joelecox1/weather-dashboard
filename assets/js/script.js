@@ -1,9 +1,16 @@
 var apiKey = "3be86409614e60c4b052629fe253efcc";
+var cityIndex = 0;
+var cityKey = "city"; 
 
 function getSearchValue() {
   var searchValue = document.getElementById("search-value").value;
 
+  cityIndex++;
+
+  localStorage.setItem(cityKey, searchValue);
+
   searchWeather(searchValue);
+  history(searchValue);
 }
 
 function searchWeather(searchValue) {
@@ -60,7 +67,6 @@ function getForecast(searchValue) {
       return response.json();
     })
     .then(function (data) {
-      console.log(data);
       var forecastEl = document.getElementById("forecast");
       var forecastRowEl = document.createElement("div");
       forecastRowEl.classList.add("row");
@@ -68,9 +74,9 @@ function getForecast(searchValue) {
         if (data.list[i].dt_txt.indexOf("15:00:00") !== -1) {
           var columnEl = document.createElement("div");
           columnEl.classList.add("col-md-2");
-          console.log(columnEl);
+
           var cardEl = document.createElement("div");
-          cardEl.classList.add("card", "bg-primary", "text-white");
+          cardEl.classList.add("card", "bg-primary", "text-white", "p-2");
 
           var cardBodyEl = document.createElement("div");
           cardBodyEl.classList.add("card-body", "p-2");
@@ -89,7 +95,7 @@ function getForecast(searchValue) {
 
           var imageEl = document.createElement("img");
           imageEl.setAttribute("src", "http://openweathermap.org/img/w/" + data.list[i].weather[0].icon + ".png");
-          
+
           forecastEl.appendChild(forecastRowEl);
           forecastRowEl.appendChild(columnEl);
           columnEl.appendChild(cardEl);
@@ -104,7 +110,52 @@ function getForecast(searchValue) {
 };
 
 function getUVIndex(lon, lat) {
+  fetch(`http://api.openweathermap.org/data/2.5/uvi?lat=${lat}&lon=${lon}&appid=${apiKey}`)
+    .then(function (response) {
+      return response.json();
+    })
+    .then(function (data) {
+      var bodyEl = document.querySelector(".card-body");
+      var UVEl = document.createElement("p");
+      UVEl.textContent = "UV Index: "
+      var UVButtonEl = document.createElement("button");
+      UVButtonEl.classList.add("btn", "btn-sm");
+      UVButtonEl.textContent = data.value;
+
+      if (data.value < 3) {
+        UVButtonEl.classList.add("btn-success");
+      } else if (data.value < 8) {
+        UVButtonEl.classList.add("btn-warning");
+      } else {
+        UVButtonEl.classList.add("btn-danger");
+      }
+
+      bodyEl.appendChild(UVEl);
+      UVEl.appendChild(UVButtonEl);
+    })
+};
+
+// function history(searchValue) {
+//   // var saveCities = localStorage;
+
+//   // saveCities.forEach(function(cityKey) {
+//   //   console.log("Hello!");
+//   // })
+
+//   for (i = 0; i < localStorage.length; i++) {
+//     var cityEl = document.createElement("li");
+//     cityEl.classList.add("list-group-item", "list-group-item-action");
+//     var searchText = searchValue;
+//     cityEl.textContent = searchText;
+//     var historyList = document.querySelector(".history");
+//     historyList.onclick = function () {
+//       if (event.target.tagName == "LI") {
+//         searchWeather(event.target.textContent);
+//       }
+//     }
   
-}
+//     historyList.appendChild(cityEl);
+//   }
+// }
 
 document.getElementById("search-btn").addEventListener("click", getSearchValue);
