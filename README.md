@@ -2,7 +2,7 @@
 
 ## Description
 
-Weather App that shows weather outlook for multiple cities
+Weather App that shows current weather conditions and a 5 day forecast for by city
 
 ## Site Preview
 

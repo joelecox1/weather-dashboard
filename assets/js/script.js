@@ -91,7 +91,7 @@ function getForecast(searchValue) {
           humidityEl.textContent = "Humidity: " + data.list[i].main.humidity + "%";
 
           var imageEl = document.createElement("img");
-          imageEl.setAttribute("src", "http://openweathermap.org/img/w/" + data.list[i].weather[0].icon + ".png");
+          imageEl.setAttribute("src", `http://openweathermap.org/img/w/${data.list[i].weather[0].icon}.png`);
 
           forecastEl.appendChild(forecastRowEl);
           forecastRowEl.appendChild(columnEl);
