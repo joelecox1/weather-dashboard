@@ -2,7 +2,7 @@
 
 ## Description
 
-Weather App that shows current weather conditions and a 5 day forecast for by city
+Weather App that shows current weather conditions and a 5 day forecast by city
 
 ## Site Preview
 
