@@ -1,20 +1,16 @@
 var apiKey = "3be86409614e60c4b052629fe253efcc";
-var cityIndex = 0;
-var cityKey = "city"; 
+var historyStorage = JSON.parse(localStorage.getItem("historyStorage")) || [];
+var historyList = document.querySelector(".history");
 
 function getSearchValue() {
   var searchValue = document.getElementById("search-value").value;
-
-  cityIndex++;
-
-  localStorage.setItem(cityKey, searchValue);
 
   searchWeather(searchValue);
   history(searchValue);
 }
 
 function searchWeather(searchValue) {
-  fetch("http://api.openweathermap.org/data/2.5/weather?q=" + searchValue + "&appid=" + apiKey)
+  fetch(`http://api.openweathermap.org/data/2.5/weather?q=${searchValue}&units=imperial&appid=${apiKey}`)
     .then(function (response) {
       return response.json();
     })
@@ -45,7 +41,7 @@ function searchWeather(searchValue) {
       cardBodyEl.classList.add("card-body");
 
       var imageEl = document.createElement("img");
-      imageEl.setAttribute("src", "http://openweathermap.org/img/w/" + data.weather[0].icon + ".png");
+      imageEl.setAttribute("src", `http://openweathermap.org/img/w/${data.weather[0].icon}.png`);
 
       titleEl.appendChild(imageEl);
 
@@ -62,7 +58,7 @@ function searchWeather(searchValue) {
 };
 
 function getForecast(searchValue) {
-  fetch("http://api.openweathermap.org/data/2.5/forecast?q=" + searchValue + "&appid=" + apiKey)
+  fetch(`http://api.openweathermap.org/data/2.5/forecast?q=${searchValue}&units=imperial&appid=${apiKey}`)
     .then(function (response) {
       return response.json();
     })
@@ -70,6 +66,7 @@ function getForecast(searchValue) {
       var forecastEl = document.getElementById("forecast");
       var forecastRowEl = document.createElement("div");
       forecastRowEl.classList.add("row");
+      forecastEl.innerHTML = "";
       for (var i = 0; i < data.list.length; i++) {
         if (data.list[i].dt_txt.indexOf("15:00:00") !== -1) {
           var columnEl = document.createElement("div");
@@ -135,27 +132,34 @@ function getUVIndex(lon, lat) {
     })
 };
 
-// function history(searchValue) {
-//   // var saveCities = localStorage;
+function history(searchValue) {
+  if (searchValue !== "") {
+    historyList.innerHTML = "";
+    var newCity = {
+      city: searchValue
+    };
+        historyStorage.push(newCity);
+        localStorage.setItem("historyStorage", JSON.stringify(historyStorage));
+        showHistory();
+  };
+};
 
-//   // saveCities.forEach(function(cityKey) {
-//   //   console.log("Hello!");
-//   // })
+function showHistory() {
+  historyStorage.forEach(function(city) {
+    var cityEl = document.createElement("li");
+    cityEl.classList.add("list-group-item", "list-group-item-action");
+    var cityText = Object.values(city);
+    cityEl.textContent = cityText;
+    historyList.onclick = function () {
+      if (event.target.tagName == "LI") {
+        console.log(event.target);
+        searchWeather(event.target.textContent);
+        getForecast(event.target.textContent);
+      }
+    };
+    historyList.appendChild(cityEl);
+  })
+}
 
-//   for (i = 0; i < localStorage.length; i++) {
-//     var cityEl = document.createElement("li");
-//     cityEl.classList.add("list-group-item", "list-group-item-action");
-//     var searchText = searchValue;
-//     cityEl.textContent = searchText;
-//     var historyList = document.querySelector(".history");
-//     historyList.onclick = function () {
-//       if (event.target.tagName == "LI") {
-//         searchWeather(event.target.textContent);
-//       }
-//     }
-  
-//     historyList.appendChild(cityEl);
-//   }
-// }
-
+showHistory();
 document.getElementById("search-btn").addEventListener("click", getSearchValue);
