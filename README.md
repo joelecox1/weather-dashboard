@@ -14,4 +14,4 @@ JavaScript, HTML, and Bootstrap
 
 ### Link to deployed application
 
-[Password Generator](https://joelecox1.github.io/weather-dashboard/)
+[Weather Dashboard](https://joelecox1.github.io/weather-dashboard/)
