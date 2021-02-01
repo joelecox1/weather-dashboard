@@ -10,7 +10,7 @@ Weather App that shows current weather conditions and a 5 day forecast by city
 
 ### Technologies Used
 
-JavaScript, HTML, and CSS
+JavaScript, HTML, and Bootstrap
 
 ### Link to deployed application
 
